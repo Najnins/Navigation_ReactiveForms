@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';   // ✅ ADD THIS
 
 @Component({
   selector: 'app-order-form',
@@ -8,37 +9,50 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './order-form.css',
 })
 export class OrderForm {
-  purchaseForm : any
+
+  purchaseForm: any;
 
   protected readonly ticketTypes = [
-    {value: 'Adult', label: "Adult (18-64)"}, 
-    {value: 'Youth', label: "Youth (13+)"}, 
-    {value: 'Child', label: "Child (1-12)"}, 
-    {value: 'Seniors', label: "Seniors (65+)"}, 
-  ]
+    { value: 'Adult', label: "Adult (18-64)" },
+    { value: 'Youth', label: "Youth (13+)" },
+    { value: 'Child', label: "Child (1-12)" },
+    { value: 'Seniors', label: "Seniors (65+)" },
+  ];
 
-  constructor( private formBuilder : FormBuilder ){}
+  // ✅ Inject Router here
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {}
 
-  ngOnInit() : void{
+  ngOnInit(): void {
     this.purchaseForm = this.formBuilder.group({
-      name : ['', [Validators.required, Validators.minLength(3)] ],
+      name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       mobile: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       ticketType: ['', [Validators.required]],
       numTickets: ['', [Validators.required, Validators.min(1), Validators.max(10)]]
-    })
+    });
   }
 
-  submitForm() : void {
+  submitForm(): void {
 
-    if(this.purchaseForm?.valid){
-      alert(`Form data : ${JSON.stringify(this.purchaseForm.value)}`)
-    }else{
+    if (this.purchaseForm?.valid) {
 
-      this.purchaseForm.markAllAsTouched()
 
-      alert(`Please enter all the required inputs.`)
+
+      // ✅ REDIRECT TO HOME PAGE
+     alert('Form submitted successfully!');
+
+setTimeout(() => {
+  this.router.navigate(['/home']);
+}, 500);
+
+    } else {
+
+      this.purchaseForm.markAllAsTouched();
+
+      alert(`Please enter all the required inputs.`);
     }
   }
-
 }
